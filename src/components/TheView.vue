@@ -4,6 +4,12 @@
   하나의 컴포넌트만 가진 경우라면 The로 시작한다.-->
 	<main>
 		<div class="container text-center py-4">
+			<!-- 자식으로부터 v-bind 받음 -->
+			<!-- @이벤트명="메소드명"-->
+			<PostCreate @create-post="createPost"></PostCreate>
+
+			<hr class="my-4" />
+
 			<div class="row g-3">
 				<!-- card 사이 간격 부여 (gx, gy) -->
 				<!-- v-bind로 props 동적인 데이터 전달 방법 -->
@@ -20,15 +26,32 @@
 				<!-- 정의한 props에 정적인 데이터 전달 방법 (부모 -> 자식)-->
 				<!-- <AppCard title="제목 1" contents="내용 1"></AppCard></div> -->
 			</div>
+
+			<!-- v-model 만들기 -->
+			<hr class="my-4" />
+			<label>
+				이름
+				<input v-model="username" type="text" />
+
+				<!-- v-model을 풀어쓰면 아래와 같다. -->
+				<!-- 내부적으로 v:value라는 props로 자식에게 값을 전달-->
+				<!-- @input 이벤트로 자식의 이벤트를 전달받음 -->
+				<input
+					:value="username"
+					@input="event => (username = event.target.value)"
+					type="text"
+				/>
+			</label>
 		</div>
 	</main>
 </template>
 
 <script>
 import AppCard from '@/components/AppCard.vue';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import PostCreate from '@/components/PostCreate.vue';
 export default {
-	components: { AppCard },
+	components: { AppCard, PostCreate },
 	setup() {
 		// 정의한 props에 동적인 데이터 전달 방법 (객체 정의 및 return)
 		const post = reactive({
@@ -57,7 +80,20 @@ export default {
 			},
 		]);
 
-		return { post, posts };
+		// 자식은 PostCreate에서 emit으로 이벤트 전달하면서 동시에 인자를 전달했다.
+		// 부모인 TheView에서는 이 인자를 받아준다.
+		// const createPost = (a, b, c, d) => {
+		// 	console.log('createPost', a, b, c, d);
+		// };
+
+		const createPost = newPost => {
+			console.log('newPost: ', newPost);
+			posts.push(newPost);
+		};
+
+		const username = ref('');
+
+		return { post, posts, createPost, username };
 	},
 };
 </script>

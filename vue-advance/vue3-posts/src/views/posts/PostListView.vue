@@ -64,9 +64,12 @@ const router = useRouter();
 // });
 // };
 
-const goPage = () => {
+const goPage = id => {
 	router.push({
-		name: 'PostCreate',
+		name: 'PostDetail',
+		params: {
+			id,
+		},
 	});
 };
 </script>

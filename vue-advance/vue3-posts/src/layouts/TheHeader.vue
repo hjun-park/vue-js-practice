@@ -66,7 +66,11 @@ import { useRouter } from 'vue-router';
 // 페이지로 보내려면 push 사용
 const router = useRouter();
 const goPage = () => {
-	router.push('/posts/create');
+	// router.push('/posts/create');
+	// 객체 사용 가능
+	router.push({
+		name: 'PostCreate',
+	});
 };
 </script>
 

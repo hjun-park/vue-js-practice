@@ -7,6 +7,13 @@ import PostCreateView from '@/views/posts/PostCreateView.vue';
 import PostDetailView from '@/views/posts/PostDetailView.vue';
 import PostEditView from '@/views/posts/PostEditView.vue';
 import PostListView from '@/views/posts/PostListView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
+// 04-04. 중첩 라우터에 대한 경로 설정
+import NestedView from '@/views/nested/NestedView.vue';
+// 04-09. Nested One, Two 경로에 추가
+import NestedOneView from '@/views/nested/NestedOneView.vue';
+import NestedTwoView from '@/views/nested/NestedTwoView.vue';
+import NestedHomeMyView from '@/views/nested/NestedHomeMyView.vue';
 
 // 라우터 매핑 정보
 const routes = [
@@ -44,6 +51,39 @@ const routes = [
 		path: '/posts/:id/edit',
 		name: 'PostEdit',
 		component: PostEditView,
+	},
+	// 04-01. 404처리 route 설정
+	{
+		path: '/:pathMatch(.*)*',
+		name: 'NotFound',
+		component: NotFoundView,
+	},
+	// 04-05. 중첩 라우터에 대한 경로 설정
+	{
+		path: '/nested',
+		name: 'Nested',
+		component: NestedView,
+		// 04-09. 중첩 라우터 설정은 다음과 같이 진행
+		children: [
+			// 04-13. Nested만 클릭 했을 때 (home) 출력하고 싶으면 아래와 같이 설정
+			{
+				// 04-11. one은 이후에 /nested/one 으로 붙는다.
+				path: '',
+				name: 'NestedHome',
+				component: NestedHomeMyView,
+			},
+			{
+				// 04-11. one은 이후에 /nested/one 으로 붙는다.
+				path: 'one',
+				name: 'NestedOne',
+				component: NestedOneView,
+			},
+			{
+				path: 'two',
+				name: 'NestedTwo',
+				component: NestedTwoView,
+			},
+		],
 	},
 ];
 

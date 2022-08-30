@@ -37,6 +37,12 @@
 								>게시글</RouterLink
 							>
 						</li>
+						<!-- 04-06. NestedView로 이동하는 Nav 바를 만듦-->
+						<li class="nav-item">
+							<RouterLink class="nav-link" active-class="active" to="/nested"
+								>Nested</RouterLink
+							>
+						</li>
 
 						<!-- <li class="nav-item"> -->
 						<!-- 02-05. 기존 a태그를 사용한 부분은 클릭 시 페이지 리로딩이 된다. -->

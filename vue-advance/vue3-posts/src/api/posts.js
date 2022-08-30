@@ -12,3 +12,8 @@ const posts = [
 export function getPosts() {
 	return posts;
 }
+
+// 05-01. 함수 정의 (id를 갖고 posts에 있는 것을 찾는 api)
+export function getPostById(id) {
+	return posts.find(item => item.id === id);
+}

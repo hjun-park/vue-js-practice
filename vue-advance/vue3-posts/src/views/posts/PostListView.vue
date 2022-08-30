@@ -22,12 +22,23 @@
 				></PostItem>
 			</div>
 		</div>
+		<hr class="mmy-4" />
+		<!-- 05-07. PostDetailView에 있는 id가 route에 의존하는 상태기 떄문에 당연히 되지 않음 --->
+		<!-- 그래서 router 속성에 props를 사용한다. -->
+		<AppCard>
+			<PostDetailView :id="2"></PostDetailView>
+		</AppCard>
+		<!-- <PostDetailView :id="2"></PostDetailView> -->
 	</div>
 </template>
 
 <script setup>
 // 03-12. template에 사용하기 위해 PostItem import
 import PostItem from '@/components/posts/PostItem.vue';
+
+// 05-06. 게시판 미리보기 컴포넌트 만들기
+import PostDetailView from '@/views/posts/PostDetailView.vue';
+import AppCard from '@/components/AppCard.vue';
 
 // 03-17. api/posts.js 에서 작성한 메소드 import
 import { getPosts } from '@/api/posts';

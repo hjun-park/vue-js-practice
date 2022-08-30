@@ -46,6 +46,19 @@ const routes = [
 		// 03-21. 이름 지정
 		name: 'PostDetail',
 		component: PostDetailView,
+		// 05-08. 라우터에 props 전달하도록 설정
+		// 				이렇게 하면 :id가 자식 컴포넌트에게 props로 전달함
+		// props: true,
+
+		// 05-10. 객체로 props를 전달하는 방법
+		// props: { word: 'hello' },
+
+		// 05-11. 함수로 props를 전달하는 방법 (// route 객체를 던져줌)
+		props: route => {
+			return {
+				id: parseInt(route.params.id),
+			};
+		},
 	},
 	{
 		path: '/posts/:id/edit',

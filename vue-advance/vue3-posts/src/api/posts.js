@@ -1,3 +1,6 @@
+// 07-01. axios import
+import axios from 'axios';
+
 // 03-15. axios 모듈로 json 데이터 조회 예정
 // 일단은 조회했다고 가정하고 하드코딩
 const posts = [
@@ -10,10 +13,23 @@ const posts = [
 
 // 목록을 조회할 수 있도록 getPost 함수 생성
 export function getPosts() {
-	return posts;
+	return axios.get('http://localhost:5000/posts');
 }
 
 // 05-01. 함수 정의 (id를 갖고 posts에 있는 것을 찾는 api)
 export function getPostById(id) {
-	return posts.find(item => item.id === id);
+	return axios.get(`http://localhost:5000/posts/${id}`);
+}
+
+// 07-02. axios 등록 함수
+export function createPost(data) {
+	return axios.post('http://localhost:5000/posts', data);
+}
+
+export function updatePost(id, data) {
+	return axios.put(`http://localhost:5000/posts/${id}`, data);
+}
+
+export function deletePost(id, data) {
+	return axios.delete(`http://localhost:5000/posts/${id}`);
 }

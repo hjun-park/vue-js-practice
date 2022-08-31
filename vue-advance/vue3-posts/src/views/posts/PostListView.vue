@@ -47,8 +47,41 @@ import { useRouter } from 'vue-router';
 
 // 03-16. posts라는 반응형 데이터 생성
 const posts = ref([]);
-const fetchPosts = () => {
-	posts.value = getPosts();
+// 07-06.  asnync를 사용하면 await도 같이 사용
+const fetchPosts = async () => {
+	// 07-03. 어떤 걸 반환하는지 결과값 출력
+	// const response = getPosts();
+	// console.log('response: ', response); // promise 객체를 반환
+	//
+	//
+	//
+	/* 07-04. promise
+		- js에서 비동기를 처리할 떄 사용하는 객체
+		- 해당 객체에 .then 을 사용한다.
+	*/
+	// getPosts()
+	// 	.then(response => {
+	// 		console.log('response: ', response);
+	// 	})
+	// 	.catch(err => {
+	// 		console.log('error: ', err);
+	// 	});
+	//
+	//
+	/* 
+		07-05. promise 대신 사용하는 async/await
+	*/
+	try {
+		// const response = await getPosts();
+		const { data } = await getPosts();
+		posts.value = data;
+		// console.dir(response); // 객체를 편하게 보는 방법
+		// ({ data: posts.value } = await getPosts()); // 또 다른 구조분해 할당 방법
+	} catch (error) {
+		console.error(error);
+	}
+
+	// posts.value = getPosts();
 };
 
 fetchPosts();

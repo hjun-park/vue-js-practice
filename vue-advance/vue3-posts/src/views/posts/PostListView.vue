@@ -2,6 +2,22 @@
 	<div>
 		<h2>게시글 목록</h2>
 		<hr class="my-4" />
+		<form @submit.prevent>
+			<div class="row g-3">
+				<div class="col">
+					<!-- 08-09. watchEffect가 반응형 데이터 변경 시 함수가 재실행 되므로 필터 구현 가능  -->
+					<input v-model="title_like" type="text" class="form-control" />
+				</div>
+				<div class="col-3">
+					<select v-model="params._limit" class="form-select">
+						<option value="3">3개씩 보기</option>
+						<option value="6">6개씩 보기</option>
+						<option value="9">9개씩 보기</option>
+					</select>
+				</div>
+			</div>
+		</form>
+		<hr class="my-4" />
 
 		<!-- 03-14. Grid System 이용해서 목록에 뿌려보기 -->
 		<!-- Grid System 은 간격조정을 통해 레이아웃 설정이 가능하다 -->
@@ -22,32 +38,83 @@
 				></PostItem>
 			</div>
 		</div>
-		<hr class="mmy-4" />
+		<nav class="mt-5" aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" :class="{ disabled: !(params._page > 1) }">
+					<a
+						class="page-link"
+						href="#"
+						aria-label="Previous"
+						@click.prevent="--params._page"
+					>
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<!-- 08-06. 페이징 처리 -->
+				<li
+					v-for="page in pageCount"
+					:key="page"
+					class="page-item"
+					:class="{ active: params._page === page }"
+				>
+					<a class="page-link" href="#" @click.prevent="params._page = page">{{
+						page
+					}}</a>
+				</li>
+				<li
+					class="page-item"
+					:class="{ disabled: !(params._page < pageCount) }"
+				>
+					<a
+						class="page-link"
+						href="#"
+						aria-label="Next"
+						@click.prevent="++params._page"
+					>
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<hr class="my-5" />
 		<!-- 05-07. PostDetailView에 있는 id가 route에 의존하는 상태기 떄문에 당연히 되지 않음 --->
 		<!-- 그래서 router 속성에 props를 사용한다. -->
 		<AppCard>
 			<PostDetailView :id="2"></PostDetailView>
 		</AppCard>
-		<!-- <PostDetailView :id="2"></PostDetailView> -->
 	</div>
 </template>
 
 <script setup>
 // 03-12. template에 사용하기 위해 PostItem import
 import PostItem from '@/components/posts/PostItem.vue';
-
 // 05-06. 게시판 미리보기 컴포넌트 만들기
 import PostDetailView from '@/views/posts/PostDetailView.vue';
 import AppCard from '@/components/AppCard.vue';
-
 // 03-17. api/posts.js 에서 작성한 메소드 import
 import { getPosts } from '@/api/posts';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 // 03-16. posts라는 반응형 데이터 생성
 const posts = ref([]);
 // 07-06.  asnync를 사용하면 await도 같이 사용
+
+// 08-02. 파라미터 객체 선언
+const params = ref({
+	_sort: 'createdAt',
+	_order: 'desc',
+	_page: 2, // 08-07. 페이지 처리에 따라 조회
+	_limit: 3,
+	title_like: '',
+});
+// 08-04. 페이징 처리
+const totalCount = ref(0);
+const pageCount = computed(() =>
+	Math.ceil(totalCount.value / params.value._limit),
+);
+
 const fetchPosts = async () => {
 	// 07-03. 어떤 걸 반환하는지 결과값 출력
 	// const response = getPosts();
@@ -68,15 +135,19 @@ const fetchPosts = async () => {
 	// 	});
 	//
 	//
+
 	/* 
 		07-05. promise 대신 사용하는 async/await
 	*/
 	try {
 		// const response = await getPosts();
-		const { data } = await getPosts();
+		const { data, headers } = await getPosts(params.value); // 08-03. 파라미터 대입
 		posts.value = data;
 		// console.dir(response); // 객체를 편하게 보는 방법
 		// ({ data: posts.value } = await getPosts()); // 또 다른 구조분해 할당 방법
+
+		// 08-05. 헤더에서 x-total-count 가져옴
+		totalCount.value = headers['x-total-count'];
 	} catch (error) {
 		console.error(error);
 	}
@@ -84,7 +155,11 @@ const fetchPosts = async () => {
 	// posts.value = getPosts();
 };
 
-fetchPosts();
+// fetchPosts();
+// 08-08. watchEffect에 콜백함수를 넣으면 fetchPosts 함수에서 사용하고 있는
+// 반응형 상태가 변경이 되었을 때 해당 콜백함수를 다시 실행할 수 있다.
+// 즉, 페이징 넘버를 클릭하면 다시 함수를 호출할 수 있다.
+watchEffect(fetchPosts);
 
 // 03-19. 이동하는 goPage 메소드 정의 (push)
 const router = useRouter();

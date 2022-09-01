@@ -12,8 +12,8 @@ const posts = [
 ];
 
 // 목록을 조회할 수 있도록 getPost 함수 생성
-export function getPosts() {
-	return axios.get('http://localhost:5000/posts');
+export function getPosts(params) {
+	return axios.get('http://localhost:5000/posts', { params }); // 08-01. params 객체로 전달
 }
 
 // 05-01. 함수 정의 (id를 갖고 posts에 있는 것을 찾는 api)

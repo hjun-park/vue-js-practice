@@ -54,11 +54,13 @@ const routes = [
 		// props: { word: 'hello' },
 
 		// 05-11. 함수로 props를 전달하는 방법 (// route 객체를 던져줌)
-		props: route => {
-			return {
-				id: parseInt(route.params.id),
-			};
-		},
+		// 09-06. 문자열로 넘어오게 타입캐스팅 하지 않음
+		props: true,
+		// props: route => {
+		// 	return {
+		// 		id: parseInt(route.params.id),
+		// 	};
+		// },
 	},
 	{
 		path: '/posts/:id/edit',
@@ -110,7 +112,7 @@ const router = createRouter({
 		---------------------------------------------------------------------------------------------
 		SSR
 			- 페이지 이동 시 리로딩이 일어남
-			- UI에 보여줄 html 문서를 서버에서 만들어서 내려주는 것을 SSR이라고 한다.
+			- U	I에 보여줄 html 문서를 서버에서 만들어서 내려주는 것을 SSR이라고 한다.
 		CSR
 			- vue와 같은 프레임워크처럼 client, 즉 js 코드로 html을 생성해 사용자에게 보여주는 것을 말함
 

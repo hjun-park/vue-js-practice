@@ -48,6 +48,9 @@ import { deletePost } from '@/api/posts';
 
 // 05-09. route에 props 전달
 const props = defineProps({
+	// id: Number,
+
+	// 09-07. 문자열로 넘어가도록 변경
 	id: Number,
 });
 

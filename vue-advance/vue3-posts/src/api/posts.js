@@ -55,9 +55,9 @@ export function createPost(data) {
 }
 
 export function updatePost(id, data) {
-	return posts.put(id, data);
+	return posts.put(`/${id}`, data);
 }
 
 export function deletePost(id) {
-	return posts.delete(id);
+	return posts.delete(`/${id}`);
 }

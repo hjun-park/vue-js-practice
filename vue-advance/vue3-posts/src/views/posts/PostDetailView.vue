@@ -51,7 +51,7 @@ const props = defineProps({
 	// id: Number,
 
 	// 09-07. 문자열로 넘어가도록 변경
-	id: Number,
+	id: [String, Number],
 });
 
 // 03-23. 버튼들에 대해 route 지정

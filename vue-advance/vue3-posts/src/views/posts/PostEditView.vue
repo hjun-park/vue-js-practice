@@ -2,39 +2,24 @@
 	<div>
 		<h2>게시글 수정</h2>
 		<hr class="my-4" />
-		<!-- 07-16. 클릭 시에 edit 함수 실행-->
-		<form @submit.prevent="edit">
-			<div class="mb-3">
-				<label for="title" class="form-label">제목</label>
-				<!-- 07-15. 수정 부분에 대한 v-model 바인딩 -->
-				<input
-					v-model="form.title"
-					type="text"
-					class="form-control"
-					id="title"
-				/>
-			</div>
-			<div class="mb-3">
-				<label for="exampleFormControlTextarea1" class="form-label">내용</label>
-				<textarea
-					v-model="form.content"
-					class="form-control"
-					id="content"
-					rows="3"
-				></textarea>
-			</div>
-			<div class="pt-4">
+		<PostForm
+			v-model:title="form.title"
+			v-model:content="form.content"
+			@submit.prevent="edit"
+		>
+			<!-- 10-09. 마찬가지로 slot 생성 (슬롯이란 템플릿)-->
+			<template #actions>
 				<!-- 03-24. 취소버튼 클릭하면 상세페이지로 가도록 설정 -->
 				<button
 					type="button"
-					class="btn btn-outline-danger me-2"
+					class="btn btn-outline-danger"
 					@click="goDetailPage"
 				>
 					취소
 				</button>
 				<button class="btn btn-primary">수정</button>
-			</div>
-		</form>
+			</template>
+		</PostForm>
 	</div>
 </template>
 
@@ -42,6 +27,8 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getPostById, updatePost } from '@/api/posts';
+//10-08. 여기도 컴포넌트 적용
+import PostForm from '@/components/posts/PostForm.vue';
 
 // 03-25. route로부터 얻은 id 이용하여 상세페이지로 이동
 const route = useRoute();

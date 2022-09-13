@@ -38,50 +38,21 @@
 				></PostItem>
 			</div>
 		</div>
-		<nav class="mt-5" aria-label="Page navigation example">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" :class="{ disabled: !(params._page > 1) }">
-					<a
-						class="page-link"
-						href="#"
-						aria-label="Previous"
-						@click.prevent="--params._page"
-					>
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
-				<!-- 08-06. 페이징 처리 -->
-				<li
-					v-for="page in pageCount"
-					:key="page"
-					class="page-item"
-					:class="{ active: params._page === page }"
-				>
-					<a class="page-link" href="#" @click.prevent="params._page = page">{{
-						page
-					}}</a>
-				</li>
-				<li
-					class="page-item"
-					:class="{ disabled: !(params._page < pageCount) }"
-				>
-					<a
-						class="page-link"
-						href="#"
-						aria-label="Next"
-						@click.prevent="++params._page"
-					>
-						<span aria-hidden="true">&raquo;</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
-		<hr class="my-5" />
-		<!-- 05-07. PostDetailView에 있는 id가 route에 의존하는 상태기 떄문에 당연히 되지 않음 --->
-		<!-- 그래서 router 속성에 props를 사용한다. -->
-		<AppCard>
-			<PostDetailView :id="2"></PostDetailView>
-		</AppCard>
+		<!-- 10-17.-->
+		<AppPagination
+			:current-page="params._page"
+			:page-count="pageCount"
+			@page="page => (params._page = page)"
+		/>
+
+		<template v-if="posts && posts.length > 0">
+			<hr class="my-5" />
+			<!-- 05-07. PostDetailView에 있는 id가 route에 의존하는 상태기 떄문에 당연히 되지 않음 --->
+			<!-- 그래서 router 속성에 props를 사용한다. -->
+			<AppCard>
+				<PostDetailView :id="posts[0].id"></PostDetailView>
+			</AppCard>
+		</template>
 	</div>
 </template>
 
@@ -96,6 +67,8 @@ import { getPosts } from '@/api/posts';
 import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
+// 10-16. 페이징 컴포넌트를 사용
+import AppPagination from '@/components/AppPagination.vue';
 
 // 03-16. posts라는 반응형 데이터 생성
 const posts = ref([]);
@@ -105,7 +78,7 @@ const posts = ref([]);
 const params = ref({
 	_sort: 'createdAt',
 	_order: 'desc',
-	_page: 2, // 08-07. 페이지 처리에 따라 조회
+	_page: 1, // 08-07. 페이지 처리에 따라 조회
 	_limit: 3,
 	title_like: '',
 });

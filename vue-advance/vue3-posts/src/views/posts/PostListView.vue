@@ -2,42 +2,37 @@
 	<div>
 		<h2>게시글 목록</h2>
 		<hr class="my-4" />
-		<form @submit.prevent>
-			<div class="row g-3">
-				<div class="col">
-					<!-- 08-09. watchEffect가 반응형 데이터 변경 시 함수가 재실행 되므로 필터 구현 가능  -->
-					<input v-model="title_like" type="text" class="form-control" />
-				</div>
-				<div class="col-3">
-					<select v-model="params._limit" class="form-select">
-						<option value="3">3개씩 보기</option>
-						<option value="6">6개씩 보기</option>
-						<option value="9">9개씩 보기</option>
-					</select>
-				</div>
-			</div>
-		</form>
+
+		<PostFilter
+			v-model:title="params.title_like"
+			v-model:limit="params._limit"
+		></PostFilter>
+
 		<hr class="my-4" />
+		<AppGrid :items="posts">
+			<template v-slot="{ item }">
+				<PostItem
+					:title="item.title"
+					:content="item.content"
+					:created-at="item.createdAt"
+					@click="goPage(item.id)"
+				></PostItem>
+			</template>
+		</AppGrid>
 
 		<!-- 03-14. Grid System 이용해서 목록에 뿌려보기 -->
 		<!-- Grid System 은 간격조정을 통해 레이아웃 설정이 가능하다 -->
 		<!-- [참고영상 1] https://www.youtube.com/watch?v=V30z8k8kTfE -->
 		<!-- [참고영상 2] https://www.youtube.com/watch?v=InuKrcuByWI -->
-		<div class="row g-3">
-			<!-- 03-18. for문을 돌면서 개수만큼 화면 출력 -->
-			<div v-for="post in posts" :key="post.id" class="col-4">
-				<!-- 03-13. 자식에서 선언한 props에게 부모가 데이터 전달 -->
-				<!-- 부모: PostListView.vue / 자식: PostItem.vue -->
-				<!-- 03-18. for 통해서 받는 데이터를 v-model 에 담아둔다. (props) -->
-				<!-- 클릭 시에는 id 값을 받아서 이동 -->
-				<PostItem
-					:title="post.title"
-					:content="post.content"
-					:created-at="post.createdAt"
-					@click="goPage(post.id)"
-				></PostItem>
-			</div>
-		</div>
+		<!-- <div class="row g-3"> -->
+		<!-- 03-18. for문을 돌면서 개수만큼 화면 출력 -->
+		<!-- <div v-for="post in posts" :key="post.id" class="col-4"> -->
+		<!-- 03-13. 자식에서 선언한 props에게 부모가 데이터 전달 -->
+		<!-- 부모: PostListView.vue / 자식: PostItem.vue -->
+		<!-- 03-18. for 통해서 받는 데이터를 v-model 에 담아둔다. (props) -->
+		<!-- 클릭 시에는 id 값을 받아서 이동 -->
+		<!-- </div> -->
+		<!-- </div> -->
 		<!-- 10-17.-->
 		<AppPagination
 			:current-page="params._page"
@@ -69,6 +64,8 @@ import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 // 10-16. 페이징 컴포넌트를 사용
 import AppPagination from '@/components/AppPagination.vue';
+import AppGrid from '@/components/AppGrid.vue';
+import PostFilter from '@/components/posts/PostFilter.vue';
 
 // 03-16. posts라는 반응형 데이터 생성
 const posts = ref([]);

@@ -21,7 +21,10 @@
 			</template>
 		</PostForm>
 		<!-- 11-01. alert 보이도록 구성 -->
-		<AppAlert :show="showAlert" :message="alertMessage" :type="alertType" />
+		<!-- <AppAlert :show="showAlert" :message="alertMessage" :type="alertType" /> -->
+
+		<!-- 13-06. 주는 쪽에서 AppAlert 설정 -->
+		<AppAlert :items="alerts"></AppAlert>
 	</div>
 </template>
 
@@ -62,23 +65,27 @@ const edit = async () => {
 		vAlert('수정이 완료되었습니다.', 'success');
 	} catch (error) {
 		console.error(error);
-		vAlert('네트워크 오류!', 'error');
+		vAlert('수정 실패!', 'error');
 	}
 };
 
 const goDetailPage = () => router.push({ name: 'PostDetail', params: { id } });
 
 // 11-03. alert
-const showAlert = ref(false);
-const alertMessage = ref('');
-const alertType = ref('');
+// const showAlert = ref(false);
+// const alertMessage = ref('');
+// const alertType = ref('');
+const alerts = ref([]);
 const vAlert = (message, type = 'error') => {
-	showAlert.value = true;
-	alertMessage.value = message;
-	alertType.value = type;
+	alerts.value.push({ message, type });
+	// showAlert.value = true;
+	// alertMessage.value = message;
+	// alertType.value = type;
 
 	setTimeout(() => {
-		showAlert.value = false;
+		// showAlert.value = false;
+		// 13-07. 맨 첫 번째에 있는 아이템 먼저 제거
+		alerts.value.shift();
 	}, 2000);
 };
 </script>
